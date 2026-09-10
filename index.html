@@ -92,6 +92,11 @@
             header.site {
                 padding: 22px 0 0;
             }
+            .header-inner {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
             .brand {
                 display: flex;
                 align-items: center;
@@ -402,31 +407,33 @@
     <body>
         <header class="site">
             <div class="wrap">
-                <div class="brand">
-                    <svg
-                        viewBox="0 0 108 108"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                    >
-                        <path
-                            fill="#080B0A"
-                            d="M54,0 A54,54 0,1 0,54,108 A54,54 0,1 0,54,0"
-                        />
-                        <path
-                            fill="#8FE3AD"
-                            d="M25,76 L25,32 C25,29 27,27 30,27 C32,27 34,28 35,31 L45,52 L54,31 C55,28 57,27 60,27 C63,27 65,29 65,32 L65,61 C65,64 63,66 60,66 C57,66 55,64 55,61 L55,48 L49,62 C48,65 46,67 43,67 C40,67 38,65 37,62 L35,57 L35,76 C35,79 33,81 30,81 C27,81 25,79 25,76 Z"
-                        />
-                        <path
-                            fill="#8FE3AD"
-                            d="M73,42 C75,40 78,40 80,42 C84,46 84,52 80,56 C78,58 75,58 73,56 C71,54 71,51 73,49 C75,47 75,45 73,42 Z"
-                        />
-                        <path
-                            fill="#BDF2CE"
-                            d="M84,34 C86,32 89,32 91,34 C97,40 97,52 91,58 C89,60 86,60 84,58 C82,56 82,53 84,51 C87,48 87,43 84,41 C82,39 82,36 84,34 Z"
-                        />
-                    </svg>
-                    <span>Musiconda</span>
-                    <span class="dev-badge">by Spiderbrains</span>
+                <div class="header-inner">
+                    <div class="brand">
+                        <svg
+                            viewBox="0 0 108 108"
+                            xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true"
+                        >
+                            <path
+                                fill="#080B0A"
+                                d="M54,0 A54,54 0,1 0,54,108 A54,54 0,1 0,54,0"
+                            />
+                            <path
+                                fill="#8FE3AD"
+                                d="M25,76 L25,32 C25,29 27,27 30,27 C32,27 34,28 35,31 L45,52 L54,31 C55,28 57,27 60,27 C63,27 65,29 65,32 L65,61 C65,64 63,66 60,66 C57,66 55,64 55,61 L55,48 L49,62 C48,65 46,67 43,67 C40,67 38,65 37,62 L35,57 L35,76 C35,79 33,81 30,81 C27,81 25,79 25,76 Z"
+                            />
+                            <path
+                                fill="#8FE3AD"
+                                d="M73,42 C75,40 78,40 80,42 C84,46 84,52 80,56 C78,58 75,58 73,56 C71,54 71,51 73,49 C75,47 75,45 73,42 Z"
+                            />
+                            <path
+                                fill="#BDF2CE"
+                                d="M84,34 C86,32 89,32 91,34 C97,40 97,52 91,58 C89,60 86,60 84,58 C82,56 82,53 84,51 C87,48 87,43 84,41 C82,39 82,36 84,34 Z"
+                            />
+                        </svg>
+                        <span>Musiconda</span>
+                    </div>
+                    <div class="dev-badge">by Spiderbrains</div>
                 </div>
             </div>
         </header>
