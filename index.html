@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Musiconda — Understand your music</title>
+        <meta
+            name="description"
+            content="Musiconda analyzes songs on your Android phone — key, tempo, and chords, synced live as they play."
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --bg: #080b0a;
+                --bg-raised: #0e1310;
+                --line: rgba(143, 227, 173, 0.14);
+                --line-strong: rgba(143, 227, 173, 0.28);
+                --text: #eaf3ec;
+                --text-dim: #93a39a;
+                --text-faint: #5c6b63;
+                --green: #8fe3ad;
+                --green-light: #bdf2ce;
+                --green-dim: rgba(143, 227, 173, 0.1);
+                --radius: 14px;
+                --max: 640px;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html {
+                -webkit-text-size-adjust: 100%;
+                scroll-behavior: smooth;
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                html {
+                    scroll-behavior: auto;
+                }
+                * {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.01ms !important;
+                }
+            }
+
+            body {
+                margin: 0;
+                background: var(--bg);
+                color: var(--text);
+                font-family: "Manrope", system-ui, sans-serif;
+                font-weight: 400;
+                line-height: 1.55;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            a {
+                color: inherit;
+            }
+
+            ::selection {
+                background: var(--green);
+                color: #061008;
+            }
+
+            :focus-visible {
+                outline: 2px solid var(--green);
+                outline-offset: 3px;
+                border-radius: 4px;
+            }
+
+            img,
+            svg {
+                display: block;
+                max-width: 100%;
+            }
+
+            .wrap {
+                max-width: var(--max);
+                margin: 0 auto;
+                padding: 0 24px;
+            }
+
+            /* ---------- Header ---------- */
+
+            header.site {
+                padding: 22px 0 0;
+            }
+            .brand {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .brand svg {
+                width: 30px;
+                height: 30px;
+                flex-shrink: 0;
+            }
+            .brand span {
+                font-weight: 700;
+                font-size: 17px;
+                letter-spacing: -0.01em;
+            }
+            .dev-badge {
+                font-weight: 600 !important;
+                font-size: 11.5px !important;
+                letter-spacing: normal !important;
+                color: var(--green-light);
+                background: var(--green-dim);
+                border: 1px solid var(--line-strong);
+                padding: 4px 10px;
+                border-radius: 999px;
+                line-height: 1.4;
+            }
+
+            /* ---------- Hero ---------- */
+
+            .hero {
+                position: relative;
+                padding: 64px 0 56px;
+                overflow: hidden;
+            }
+
+            .wave-field {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                padding: 0 6px;
+                opacity: 0.55;
+                -webkit-mask-image: linear-gradient(
+                    to bottom,
+                    transparent,
+                    rgba(0, 0, 0, 0.9) 30%,
+                    rgba(0, 0, 0, 0.9) 70%,
+                    transparent
+                );
+                mask-image: linear-gradient(
+                    to bottom,
+                    transparent,
+                    rgba(0, 0, 0, 0.9) 30%,
+                    rgba(0, 0, 0, 0.9) 70%,
+                    transparent
+                );
+                pointer-events: none;
+            }
+            .wave-field span {
+                display: block;
+                width: 3px;
+                border-radius: 2px;
+                background: linear-gradient(
+                    to top,
+                    var(--green) 0%,
+                    var(--green-light) 100%
+                );
+                animation: bar 2.6s ease-in-out infinite;
+                opacity: 0.5;
+            }
+
+            @keyframes bar {
+                0%,
+                100% {
+                    transform: scaleY(0.35);
+                }
+                50% {
+                    transform: scaleY(1);
+                }
+            }
+
+            .hero-inner {
+                position: relative;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: clamp(34px, 8vw, 46px);
+                font-weight: 800;
+                letter-spacing: -0.02em;
+                line-height: 1.08;
+                margin: 0 0 16px;
+            }
+
+            .hero p.sub {
+                color: var(--text-dim);
+                font-size: 17px;
+                max-width: 440px;
+                margin: 0 auto 32px;
+            }
+
+            .cta {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                background: var(--green);
+                color: #06130a;
+                font-weight: 700;
+                font-size: 16px;
+                padding: 15px 26px;
+                border-radius: 999px;
+                text-decoration: none;
+                border: none;
+                cursor: pointer;
+                transition:
+                    transform 0.15s ease,
+                    background 0.15s ease;
+            }
+            .cta:hover {
+                background: var(--green-light);
+                transform: translateY(-1px);
+            }
+            .cta:active {
+                transform: translateY(0);
+            }
+            .cta svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .meta-row {
+                margin-top: 14px;
+                font-size: 13px;
+                color: var(--text-faint);
+            }
+            .meta-row .dot {
+                margin: 0 8px;
+                color: var(--line-strong);
+            }
+
+            /* ---------- Sections ---------- */
+
+            section {
+                padding: 48px 0;
+                border-top: 1px solid var(--line);
+            }
+
+            h2 {
+                font-size: 22px;
+                font-weight: 700;
+                letter-spacing: -0.01em;
+                margin: 0 0 8px;
+            }
+            section > .wrap > p.lead {
+                color: var(--text-dim);
+                font-size: 15px;
+                margin: 0 0 28px;
+                max-width: 480px;
+            }
+
+            /* Feature grid */
+
+            .features {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1px;
+                border: 1px solid var(--line);
+                border-radius: var(--radius);
+                overflow: hidden;
+                background: var(--line);
+            }
+            .feature {
+                background: var(--bg-raised);
+                padding: 20px 18px;
+            }
+            .feature .fname {
+                font-weight: 700;
+                font-size: 15px;
+                color: var(--green-light);
+                margin-bottom: 6px;
+            }
+            .feature .fdesc {
+                font-size: 13.5px;
+                color: var(--text-dim);
+                line-height: 1.5;
+            }
+
+            @media (max-width: 420px) {
+                .features {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* Steps */
+
+            .steps {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                counter-reset: step;
+            }
+            .steps li {
+                counter-increment: step;
+                display: flex;
+                gap: 16px;
+                padding: 18px 0;
+                border-top: 1px solid var(--line);
+            }
+            .steps li:first-child {
+                border-top: none;
+                padding-top: 0;
+            }
+            .steps li::before {
+                content: counter(step);
+                flex-shrink: 0;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                border: 1px solid var(--line-strong);
+                color: var(--green-light);
+                font-weight: 700;
+                font-size: 13px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .step-body h3 {
+                font-size: 15.5px;
+                font-weight: 700;
+                margin: 3px 0 4px;
+            }
+            .step-body p {
+                font-size: 14px;
+                color: var(--text-dim);
+                margin: 0;
+            }
+
+            /* Callout */
+
+            .callout {
+                border: 1px solid var(--line-strong);
+                background: var(--green-dim);
+                border-radius: var(--radius);
+                padding: 20px 20px;
+            }
+            .callout h3 {
+                font-size: 15px;
+                font-weight: 700;
+                color: var(--green-light);
+                margin: 0 0 10px;
+            }
+            .callout ul {
+                margin: 0;
+                padding-left: 18px;
+                font-size: 14px;
+                color: var(--text-dim);
+            }
+            .callout li {
+                margin-bottom: 6px;
+            }
+            .callout li:last-child {
+                margin-bottom: 0;
+            }
+
+            /* Report */
+
+            .links {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .link-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                border: 1px solid var(--line-strong);
+                padding: 11px 18px;
+                border-radius: 999px;
+                font-size: 14px;
+                font-weight: 600;
+                text-decoration: none;
+                color: var(--text);
+                transition:
+                    border-color 0.15s ease,
+                    background 0.15s ease;
+            }
+            .link-btn:hover {
+                border-color: var(--green);
+                background: var(--green-dim);
+            }
+
+            /* Footer */
+
+            footer {
+                padding: 32px 0 40px;
+                border-top: 1px solid var(--line);
+            }
+            footer p {
+                font-size: 12.5px;
+                color: var(--text-faint);
+                margin: 0 0 6px;
+            }
+        </style>
+    </head>
+    <body>
+        <header class="site">
+            <div class="wrap">
+                <div class="brand">
+                    <svg
+                        viewBox="0 0 108 108"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                    >
+                        <path
+                            fill="#080B0A"
+                            d="M54,0 A54,54 0,1 0,54,108 A54,54 0,1 0,54,0"
+                        />
+                        <path
+                            fill="#8FE3AD"
+                            d="M25,76 L25,32 C25,29 27,27 30,27 C32,27 34,28 35,31 L45,52 L54,31 C55,28 57,27 60,27 C63,27 65,29 65,32 L65,61 C65,64 63,66 60,66 C57,66 55,64 55,61 L55,48 L49,62 C48,65 46,67 43,67 C40,67 38,65 37,62 L35,57 L35,76 C35,79 33,81 30,81 C27,81 25,79 25,76 Z"
+                        />
+                        <path
+                            fill="#8FE3AD"
+                            d="M73,42 C75,40 78,40 80,42 C84,46 84,52 80,56 C78,58 75,58 73,56 C71,54 71,51 73,49 C75,47 75,45 73,42 Z"
+                        />
+                        <path
+                            fill="#BDF2CE"
+                            d="M84,34 C86,32 89,32 91,34 C97,40 97,52 91,58 C89,60 86,60 84,58 C82,56 82,53 84,51 C87,48 87,43 84,41 C82,39 82,36 84,34 Z"
+                        />
+                    </svg>
+                    <span>Musiconda</span>
+                    <span class="dev-badge">by Spiderbrains</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="hero" style="border-top: none; padding-top: 64px">
+            <div class="wave-field" id="waveField" aria-hidden="true"></div>
+            <div class="wrap hero-inner">
+                <h1>Understand your music.</h1>
+                <p class="sub"
+                    >Musiconda analyzes any song right on your phone — key,
+                    tempo, and chords, synced live as it plays.</p
+                >
+                <a
+                    class="cta"
+                    id="downloadBtn"
+                    href=""
+                    download="Musiconda.apk"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M12 3v12" />
+                        <path d="M7 11l5 5 5-5" />
+                        <path d="M5 20h14" />
+                    </svg>
+                    Download APK
+                </a>
+                <div class="meta-row" id="metaRow"
+                    >v0.1.0 <span class="dot">&middot;</span> Android 8.0+</div
+                >
+            </div>
+        </section>
+
+        <section id="what">
+            <div class="wrap">
+                <h2>What Musiconda does</h2>
+                <p class="lead"
+                    >Pick a song and Musiconda breaks it down for you, in real
+                    time.</p
+                >
+                <div class="features">
+                    <div class="feature">
+                        <div class="fname">Key detection</div>
+                        <div class="fdesc"
+                            >Find the musical key a song is written in.</div
+                        >
+                    </div>
+                    <div class="feature">
+                        <div class="fname">Tempo (BPM)</div>
+                        <div class="fdesc"
+                            >See how fast a track really is, down to the
+                            beat.</div
+                        >
+                    </div>
+                    <div class="feature">
+                        <div class="fname">Chord recognition</div>
+                        <div class="fdesc"
+                            >Get the chord progression pulled straight from the
+                            audio.</div
+                        >
+                    </div>
+                    <div class="feature">
+                        <div class="fname">Live chord sync</div>
+                        <div class="fdesc"
+                            >Watch chords change on screen in time with
+                            playback.</div
+                        >
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="install">
+            <div class="wrap">
+                <h2>How to install</h2>
+                <p class="lead"
+                    >Musiconda isn't on the Play Store yet, so Android needs a
+                    moment of your trust.</p
+                >
+                <ol class="steps">
+                    <li>
+                        <div class="step-body">
+                            <h3>Download the APK</h3>
+                            <p
+                                >Tap the download button near the top of this
+                                page.</p
+                            >
+                        </div>
+                    </li>
+                    <li>
+                        <div class="step-body">
+                            <h3>Open the downloaded file</h3>
+                            <p
+                                >Find it in your notifications or your Downloads
+                                folder, then tap it to open.</p
+                            >
+                        </div>
+                    </li>
+                    <li>
+                        <div class="step-body">
+                            <h3>Allow installation from this source</h3>
+                            <p
+                                >Android will warn you it's not from the Play
+                                Store — tap "Settings," then turn on "Allow from
+                                this source" and go back to install.</p
+                            >
+                        </div>
+                    </li>
+                    <li>
+                        <div class="step-body">
+                            <h3>Install and open</h3>
+                            <p
+                                >Tap install, wait a few seconds, then open
+                                Musiconda from your app list.</p
+                            >
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="use">
+            <div class="wrap">
+                <h2>How to use it</h2>
+                <p class="lead">From a song to its chords in four steps.</p>
+                <ol class="steps">
+                    <li>
+                        <div class="step-body">
+                            <h3>Paste a link or search</h3>
+                            <p
+                                >Drop in a YouTube link, or search for a song by
+                                name.</p
+                            >
+                        </div>
+                    </li>
+                    <li>
+                        <div class="step-body">
+                            <h3>Select the song</h3>
+                            <p>Choose the right result from the list.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="step-body">
+                            <h3>Let it analyze</h3>
+                            <p
+                                >Musiconda processes the audio on your device —
+                                this can take a moment for longer songs.</p
+                            >
+                        </div>
+                    </li>
+                    <li>
+                        <div class="step-body">
+                            <h3>Play</h3>
+                            <p
+                                >Hit play and watch the key, BPM, and chords
+                                update live as the song runs.</p
+                            >
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="important">
+            <div class="wrap">
+                <h2>Before you install</h2>
+                <p class="lead">A few things worth knowing about this beta.</p>
+
+                <div class="callout" style="margin-bottom: 16px">
+                    <h3>Your audio stays on your phone</h3>
+                    <ul>
+                        <li>All analysis happens locally, on-device.</li>
+                        <li
+                            >Musiconda doesn't upload your songs, your listening
+                            history, or any audio to a server.</li
+                        >
+                    </ul>
+                </div>
+
+                <div class="callout">
+                    <h3>Known limitations</h3>
+                    <ul>
+                        <li
+                            >This is an early community beta — expect rough
+                            edges.</li
+                        >
+                        <li
+                            >Some songs may fail to analyze, especially heavily
+                            produced, orchestral, or very noisy tracks.</li
+                        >
+                        <li
+                            >Chord and key detection can be less accurate in
+                            dense or fast-changing passages.</li
+                        >
+                        <li
+                            >Battery and processing time will vary by device and
+                            song length.</li
+                        >
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="report">
+            <div class="wrap">
+                <h2>Found a bug?</h2>
+                <p class="lead"
+                    >Tell us what happened — song, device, and what you expected
+                    helps most.</p
+                >
+                <div class="links">
+                    <a class="link-btn" href="#" id="githubLink"
+                        >GitHub Issues</a
+                    >
+                    <a class="link-btn" href="#" id="discordLink">Discord</a>
+                    <a class="link-btn" href="#" id="formLink">Report a bug</a>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="wrap">
+                <p
+                    >Musiconda is an independent community beta, built and
+                    maintained by one developer.</p
+                >
+                <p>Not affiliated with YouTube, Google, or Android.</p>
+            </div>
+        </footer>
+
+        <script>
+            // ---- Configuration — edit these before deploying ----
+            const CONFIG = {
+                apkUrl: "#", // direct link to the .apk file
+                apkFileName: "Musiconda.apk", // filename the browser saves it as
+                version: "v0.1.0",
+                minAndroid: "Android 8.0+",
+                githubUrl: "#", // e.g. https://github.com/you/musiconda/issues
+                discordUrl: "#", // e.g. https://discord.gg/yourinvite
+                formUrl: "#", // e.g. a Google Form link
+            };
+
+            const downloadBtn = document.getElementById("downloadBtn");
+            downloadBtn.href = CONFIG.apkUrl;
+            downloadBtn.setAttribute("download", CONFIG.apkFileName);
+
+            document.getElementById("metaRow").innerHTML =
+                CONFIG.version +
+                ' <span class="dot">&middot;</span> ' +
+                CONFIG.minAndroid;
+            document.getElementById("githubLink").href = CONFIG.githubUrl;
+            document.getElementById("discordLink").href = CONFIG.discordUrl;
+            document.getElementById("formLink").href = CONFIG.formUrl;
+
+            // The plain "download" attribute only forces a save-as dialog when the
+            // file is same-origin. If your APK is hosted elsewhere (S3, GitHub
+            // Releases, another domain), the browser may just navigate to it or
+            // preview it instead of downloading. This intercepts the click and
+            // fetches the file as a blob first, so it downloads directly regardless
+            // of where it's hosted. If the host blocks cross-origin fetches (CORS),
+            // it quietly falls back to a normal link click.
+            downloadBtn.addEventListener("click", function (e) {
+                if (!CONFIG.apkUrl || CONFIG.apkUrl === "#") return; // no real link set yet
+                e.preventDefault();
+                fetch(CONFIG.apkUrl)
+                    .then(function (res) {
+                        if (!res.ok) throw new Error("Download failed");
+                        return res.blob();
+                    })
+                    .then(function (blob) {
+                        const blobUrl = URL.createObjectURL(blob);
+                        const tempLink = document.createElement("a");
+                        tempLink.href = blobUrl;
+                        tempLink.download = CONFIG.apkFileName;
+                        document.body.appendChild(tempLink);
+                        tempLink.click();
+                        document.body.removeChild(tempLink);
+                        URL.revokeObjectURL(blobUrl);
+                    })
+                    .catch(function () {
+                        // CORS-blocked or fetch failed — fall back to a plain navigation,
+                        // which still downloads if the server sends the right headers.
+                        window.location.href = CONFIG.apkUrl;
+                    });
+            });
+
+            // ---- Hero waveform background ----
+            (function buildWave() {
+                const field = document.getElementById("waveField");
+                const count = window.innerWidth < 480 ? 34 : 56;
+                for (let i = 0; i < count; i++) {
+                    const bar = document.createElement("span");
+                    const height = 20 + Math.random() * 60;
+                    const delay = (Math.random() * 2.6).toFixed(2);
+                    const duration = (2.1 + Math.random() * 1.2).toFixed(2);
+                    bar.style.height = height + "px";
+                    bar.style.animationDelay = delay + "s";
+                    bar.style.animationDuration = duration + "s";
+                    field.appendChild(bar);
+                }
+            })();
+        </script>
+    </body>
+</html>
